@@ -1,8 +1,8 @@
 > Created by `luyidong <yidongsky@gmail.com>`
 
-##### logMonitor
+#### logMonitor
 
-监控小程序
+##### 监控小程序
 ----------
 基于应用稳定性的需求，并能及时发现问题，要求对应用程序的日志进行实时分析，当符合某个条件时就立刻报警。
 
@@ -18,14 +18,14 @@
 4. 报警设置中，数据类型和节点名称支持正则表达式匹配多个服务节点名；
 5. 节点详情页-节点详情页包含当前统计的状态值，IP，URL排序等；
 
-### 客户端
+##### 客户端
 ----------
 
 主要功能:
 1. 客户端基于Inotify事件驱动的通知机制，当检测到文件修改写入时，检索日志中包含4xx 5xx的日志，上传到服务端；
 2. 当没有文件更新时，自动释放资源，等待下一次事件触发启动。
 
-项目部署
+##### 项目部署
 ----------
 
 Java环境:
@@ -56,4 +56,4 @@ salt -N '{项目组}' cmd.run "chkconfig supervisord on;supervisord -c /etc/supe
 
 微信,SMS通知
 
-![](https://github.com/luyidong/logMonitor/blob/master/static/img/detail.jpg)
+![](https://github.com/luyidong/logMonitor/blob/master/static/img/wechar.jpg)
