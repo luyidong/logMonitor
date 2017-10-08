@@ -43,16 +43,16 @@ salt -N '{项目组}' cmd.run "chkconfig supervisord on;supervisord -c /etc/supe
 
 首页
 
-!()[https://github.com/luyidong/logMonitor/blob/master/static/img/home.png "程序首页"]
+!()[https://github.com/luyidong/logMonitor/blob/master/static/img/home.png]
 
 详情页
 
-!()[https://github.com/luyidong/logMonitor/blob/master/static/img/detail.png "详情页"]
+!()[https://github.com/luyidong/logMonitor/blob/master/static/img/detail.png]
 
 报警列表
 
-!()[https://github.com/luyidong/logMonitor/blob/master/static/img/alert-list.png "报警列表"]
+!()[https://github.com/luyidong/logMonitor/blob/master/static/img/alert-list.png]
 
 微信,SMS通知
 
-!()[https://github.com/luyidong/logMonitor/blob/master/static/img/detail.png "通知"]
+!()[https://github.com/luyidong/logMonitor/blob/master/static/img/detail.png]
