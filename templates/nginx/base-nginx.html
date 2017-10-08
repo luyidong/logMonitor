@@ -1,0 +1,367 @@
+{% load staticfiles %}
+<!--DOCTYPE html -->
+<html>
+
+<head>
+<title>{% block head_title %}日志监控{% endblock head_title %}</title>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="{% static "bootstrap/bootstrap-theme.min.css" %}" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- font-awesome -->
+<link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static "css/base.css" %}" />
+<style>
+{% block style %}{% endblock style %}
+</style>
+
+
+
+{% block head_extra %}{% endblock head_extra %}
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">监控报警</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li {% if request.path == "/nginxstatus/" %}class="active"{% endif %}><a href="{% url "nginx-status" %}">首页</a></li>
+            <li {% if request.path == "/nginxlist/" %} class="active" {% endif %}><a href="{% url "nginx-list" %}">主机列表</a></li>
+            <li {% if request.path == "/alerts/" %} class="active" {% endif %}><a href="{% url "alerts-list" %}">配置列表</a></li>
+            <!--<li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户和组 <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">组</a></li>
+                <li><a href="#">用户</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul></li>-->
+
+          </ul>
+          <form class="navbar-form navbar-left">
+            <div class="form-group">
+              <input type="text" name="q" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">搜索</button>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+              {% if not request.user.is_authenticated %}
+                  <li{% if request.path == "/login/" %} class="active" {% endif %}><a href="{% url "login" %}">登陆</a></li>
+                  <li><a href="{% url "about" %}">关于</a></li>
+              {% else %}
+
+                <li class="dropdow">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{request.user.username}}<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li{% if request.path == "/profile_edit/" %} class="active" {% endif %}><a href="{% url "profile_edit" %}">个人信息</a></li>
+                    <li{% if request.path == "/logout/" %} class="active" {% endif %}><a href="{% url "logout" %}">退出</a></li>
+
+                  </ul>
+                </li>
+                  <li><a href="{% url "about" %}">关于</a></li>
+        {% endif %}
+
+
+
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+
+    <div class='container'>
+    {% include "messages_display.html" %}
+
+        {% block content %}{% endblock content %}
+    </div>
+
+</body>
+
+<footer class="log-footer">
+
+      <p>LogMonitor built for <a href="#">Fn</a> by <a href="#">louis</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+
+</footer>
+
+<script
+  src="{% static "jquery-1.12.4.js" %}"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="{% static "bootstrap/bootstrap.min.js" %}"  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+<script src="{% static "highcharts/marked.min.js" %}"></script>
+<script src="{% static "highcharts/highstock.js" %}"></script>
+<script src="{% static "highcharts/exporting.js" %}"></script>
+
+
+<script type="text/javascript">
+
+
+
+
+$(document).ready(function () {
+
+    var node_name= $("#node_name").attr("name");
+    var data_type= $("#data_type").attr("name");
+     var status= $("#status").attr("name");
+    //alert(data_type);
+
+
+    var seriesOptions = [],
+    seriesCounter = 0,
+
+
+
+    myjson=[];
+    $.getJSON('http://localhost:8000/statustype/',{node_name:node_name},  function(json){
+
+        for (i in json){
+
+            myjson.push(json[i]);
+          //  myjson=myjson + json[i];
+        }
+        //alert(myjson)
+
+
+      /**
+ * Create the chart when all data is loaded
+ * @returns {undefined}
+ */
+function createChart() {
+        Highcharts.setOptions({
+            global: {
+            useUTC: false,
+            }
+        });
+    Highcharts.stockChart('container', {
+
+   subtitle: {
+        text: '4xx5xx统计值'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Number of Employees'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+        title : {
+            text : node_name+' 消息汇总图'
+            },
+        rangeSelector: {
+            selected: 1
+        },
+
+        yAxis: {
+
+            plotLines: [{
+                value: 0,
+                width: 2,
+                color: 'silver'
+            }]
+        },
+
+        legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+
+
+
+
+
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> <br/>',
+            valueDecimals: 2,
+            split: true
+        },
+
+        series: seriesOptions
+    });
+}
+
+$.each(myjson, function (i, name) {
+
+    var url ='http://localhost:8000/nginx/' + '?node_name=' + node_name + '&status=' + name;
+
+    $.getJSON(url,   function (data) {
+
+        seriesOptions[i] = {
+            title: 'Installation',
+            name: name + '状态值',
+            //pointInterval: 24 * 3600 * 1000,
+            pointInterval: 24 * 3600 * 1000,
+            data: data,
+            tooltip: {
+                valueDecimals: 2
+            }
+
+        };
+
+        // As we're loading the data asynchronously, we don't know what order it will arrive. So
+        // we keep a counter and create the chart when all the data is loaded.
+        seriesCounter += 1;
+
+        if (seriesCounter === myjson.length) {
+            createChart();
+        }
+    });
+});
+
+
+    });
+
+
+   //$.post('http://localhost:8000/selects/',{csrfmiddlewaretoken:"{{ csrf_token }}",node_name:node_name, date_type:date_type,},{date_type:date_type},function (data) {
+    $.getJSON('http://localhost:8000/nginx/',{node_name:node_name,status:status}, function (data) {
+        Highcharts.setOptions({
+            global: {
+            useUTC: false,
+            }
+        });
+        $('#nginx').highcharts('StockChart', {
+            rangeSelector : {
+                selected : 1
+            },
+            title : {
+                text : data_type+' 状态统计'
+            },
+            series : [{
+                name : '数值',
+                data : data,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+    });
+    //格式化数据 https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+    function formatBytes(bytes,decimals) {
+       if(bytes == 0) return '0 Bytes';
+       var k = 1024,
+           dm = decimals || 2,
+           sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+           i = Math.floor(Math.log(bytes) / Math.log(k));
+       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    //ip排行榜
+    $.getJSON('http://localhost:8000/ipapi/',{node_name:node_name},function (data) {
+        var items=[];
+        $.each(data,function(key,val){
+            items.push("<tr>");
+            items.push("<td id = ''"+key+"''><small>"+val.http_x_forwarded_for__count+"</small></td>");
+            items.push("<td id = ''"+key+"''><small>"+val.http_x_forwarded_for+"</small></td>");
+            items.push("</tr>");
+        });
+        $("<tbody/>",{"id":"ipapi",html:items.join("") }).appendTo("#ipapi");
+    });
+    //url排行榜
+    $.getJSON('http://localhost:8000/urlapi/',{node_name:node_name},function (data) {
+        var items=[];
+        $.each(data,function(key,val){
+            items.push("<tr>");
+            items.push("<td id = ''"+key+"''><small>"+val.request__count+"</small></td>");
+            items.push("<td id = ''"+key+"''><small>"+val.status+"</small></td>");
+            items.push("<td id = ''"+key+"''><small>"+val.request+"</small></td>");
+            items.push("<td id = ''"+key+"''><small>"+formatBytes(val.body_bytes_sent)+"</small></td>");
+            items.push("<td id = ''"+key+"''><small>"+val.time_local+"</small></td>");
+            items.push("</tr>");
+        });
+        $("<tbody/>",{"class":"urlapi",html:items.join("") }).appendTo("#urlapi");
+    });
+
+
+    //status排行榜
+    $.getJSON('http://localhost:8000/statusapi/',{node_name:node_name}, function (data) {
+
+
+        Highcharts.setOptions({
+            global: {
+            useUTC: false,
+            }
+        });
+            $('#status').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Status'
+        },
+        subtitle: {
+        text: '1小时内'
+        },
+        tooltip: {
+            headerFormat: '{series.name}<br>',
+            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                },
+                showInLegend: true
+            }
+        },
+        series : [{
+            type: 'pie',
+            name: 'Status访问量占比',
+                name : '数值',
+                data : data
+            }]
+    });
+
+ });
+
+
+
+
+});//end doct
+
+
+
+
+
+
+//$(function(){
+//    $('#get1 tr').each(function(){
+//alert($(this).find('td').eq(0).text());
+//});
+//});
+
+</script>
+</html>

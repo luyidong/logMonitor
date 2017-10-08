@@ -1,0 +1,66 @@
+{% extends "nginx/base-nginx.html" %}
+
+{% block content %}
+    <div class="alerts-list">
+        <h3>定义报警</h3>
+             <p><a href="{% url 'alerts-new' %}">添加</a></p>
+           {% if object_list %}
+          <table class="table table-striped">
+               <tr>
+                   <th><small>数据类型</small><h6><small>(支持RegEx)</small></h6></small></th>
+                   <th><small>最小值</small></th>
+                   <th><small>最大值</small></th>
+                   <th><small>节点名</small><h6><small>(支持RegEx)</small></h6></th>
+                   <th><small>所属用户</small></th>
+                   <th><small>所属组</small></th>
+                   <th><small>阀值状态</small></th>
+                   <th><small>通知间隔</small></th>
+                   <th><small>间隔值</small></th>
+                   <th><small>是否启用</small></th>
+                   <th><small>操作</small></th>
+
+               </tr>
+               {% for alert in object_list %}
+               <tr>
+                   <td>{{ alert.data_type }}</td>
+                   <td>{{ alert.min_value }}</td>
+                   <td>{{ alert.max_value }}</td>
+                   <td>{{ alert.node_name }}</td>
+                   <td>{% for users in alert.get_users.all %}{{ users }}<br/>{% endfor %}</td>
+                   <td>{% for groups in alert.get_groups.all %}{{ groups }}<br/>{% endfor %}</td>
+                   <td>{% ifequal alert.threshold 0  %} 正常 {% endifequal %}{% ifequal alert.threshold 1 %}警告 {% endifequal %}{% ifequal alert.threshold 2 %} 紧急{% endifequal %}{% ifequal alert.threshold 3 %} 未知{% endifequal %}</td>
+                   <td>{{ alert.interval_unit }}</td>
+                   <td>{{ alert.interval_value }}</td>
+                    <td>{% if alert.is_active %}<span style='font-size: 65%;line-height: 20px;text-align: center;height: 20px;padding: .2em .6em .3em;color: #fff;background-color: #5cb85c'> 启用</span> {% else %}<span style='font-size: 65%;line-height: 20px;text-align: center;height: 20px;padding: .2em .6em .3em;color: #fff;background-color:#c9302c'>禁用</span>{% endif %}</td>
+                   <td><a href="{% url 'alerts-edit' pk=alert.pk %}" class="label label-success" role="button"><small>编辑</small></a> <a href="{% url 'alerts-delete' pk=alert.pk %}" class="label label-danger" role="button"><small>删除</small></a></td>
+                </tr>
+               {% endfor %}
+           </table>
+           {% else %}
+           <i>没有配置报警，请先创建。</i>
+
+           {% endif %}
+
+            {% if is_paginated %}
+        <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li>
+                <span><a href="?page={{ page_obj.previous_page_number }}">上一页</a></span>
+            </li>
+        {% endif %}
+            <li class="">
+                <span>位置 {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+            </li>
+        {% if page_obj.has_next %}
+            <li>
+                <span><a href="?page={{ page_obj.next_page_number }}">下一页</a></span>
+            </li>
+        {% endif %}
+        </ul>
+        {% else %}
+           <!--还没有满足分页条目>--<!-->
+        {% endif %}
+
+    </div>
+
+{% endblock content %}

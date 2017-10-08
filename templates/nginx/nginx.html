@@ -1,0 +1,60 @@
+{% extends "nginx/base-nginx.html" %}
+{% load sizify %}
+{% block content %}
+
+    <div class="row">
+        <div class="hosts-list">
+            <h3>主机详情页</h3>
+
+             <li><a href='{{ instance.get_absolute_url }}'>{{ instance.node_name }}</a></li>
+            <div id="container" style="min-width:400px;height:400px">
+            <div id="node_name" name="{{ instance.node_name }}">{{ instance.node_name }}</div>
+            <div id="data_type" name="{{ instance.status }}">{{ instance.status }}</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-4">
+            <div id="status" style="min-width:400px;height:400px">
+            <div id="node_name" name="{{ instance.node_name }}">{{ instance.node_name }}</div>
+            <div id="data_type" name="{{ instance.status }}">{{ instance.status }}</div>
+            </div>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-7">
+
+            <table id="ipapi" class="table">
+                <thead>
+                    <tr>
+                        <th><small>访问数量</small></th>
+                        <th><small>来源IP</small></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+
+      </div>
+    </div>
+    <div class="row">
+         <table id="urlapi" class="table">
+                <thead>
+                    <tr>
+                        <th><small>访问次数</small></th>
+                        <th><small>状态</small></th>
+                        <th><small>请求URL</small></th>
+                        <th><small>大小</small></th>
+                        <th><small>时间</small></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+    </div>
+
+
+    </div>
+
+
+{% endblock content %}

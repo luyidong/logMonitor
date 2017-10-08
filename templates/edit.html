@@ -1,0 +1,20 @@
+{% extends "nginx/base-nginx.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}编辑用户信息{% endblock %}
+
+{% block content %}
+
+   <h3>用户信息</h3>
+
+    <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ user_form|crispy }}
+        {{ profile_form|crispy }}
+        {% csrf_token %}
+        <p><input type="submit" value="更新"><a href="{% url 'nginx-status' %}">返回首页</a>
+        </p>
+
+    </form>
+{% endblock %}
+

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+ {%  if request.user.is_authenticated %}
+
+      {% for alert in object_list %}
+               <tr>
+                   <td>{{ alert.node_name }}</td>
+                   <td>{{ alert.data_type }}</td>
+     {% endfor %}
+
+<div class="status">
+   <h3>监控状态</h3>
+
+   <table class="table  table-striped  table-hover">
+       <tbody>
+           <tr>
+               <th>节点名</th>
+               <th>数据类型</th>
+               <th>值</th>
+               <th>最后更新时间</th>
+            </tr>
+
+           {% for node_name, data_type_to_data_point_map in status_data_dict.items %}
+
+               {% for data_type, data_point in data_type_to_data_point_map.items %}
+
+                   <tr {% if data_point.has_alert %}
+
+                            {% if data_point.threshold == 1  %} class="danger"
+                            {% endif %}
+                            {% if data_point.threshold == 2  %} class="warning"
+                            {% endif %}
+                            {% if data_point.threshold == 3  %} class="info"
+                            {% endif %}
+
+                       {% endif %}
+
+                           >
+                        <td><a href="{% url "hosts-detail" id=data_point.id %}">{{ node_name }}</a></td>
+                        <td>{{ data_type }}</td>
+                        <td>{{ data_point.data_value }}</td>
+                        <td>{{ data_point.datetime |timesince }} ago</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+       </tbody>
+   </table>
+
+        <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li>
+                <span><a href="?page={{ page_obj.previous_page_number }}">上一页</a></span>
+            </li>
+        {% endif %}
+            <li class="">
+                <span>位置 {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+            </li>
+        {% if page_obj.has_next %}
+            <li>
+                <span><a href="?page={{ page_obj.next_page_number }}">下一页</a></span>
+            </li>
+
+        </ul>
+
+        {% endif %}
+</div>
+
+    {% else %}
+    <p>You must login to view</p>
+    {% endif %}
+{% endblock content %}

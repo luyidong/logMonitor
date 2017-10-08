@@ -1,0 +1,14 @@
+{% extends "nginx/base-nginx.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<h3>Delete alert?</h3>
+   <p>Are you sure you want to delete this alert?</p>
+   <form action="" method="post">{% csrf_token %}
+       {{ form|crispy }}
+        <input type="submit" value="Delete" />
+        <a href="{% url 'nginx-list' %}">Cancel</a>
+    </form>
+
+{% endblock content %}

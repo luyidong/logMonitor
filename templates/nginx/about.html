@@ -1,0 +1,93 @@
+{% extends "nginx/base-nginx.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+    <div class="container">
+
+
+      <h3>监控小程序</h3>
+        <p>基于应用稳定性的需求，并能及时发现问题，要求对应用程序的日志进行实时分析，当符合某个条件时就立刻报警。</p>
+        <p>目前主要针对日志中5XX 4XX进行收集，当该关键字出现时(状态值为1)，匹配到报警设定的阀值（最大阀值为1）时，发送报警给收件人。</p>
+
+        <blockquote>
+            <h5>服务端</h5>
+            <footer>主要功能:
+                <ol>
+                    <li>支持Ldap账号登录</li>
+                    <li>个人支持绑定微信，手机，邮件(默认)通知；</li>
+                    <li>报警匹配到个人和用户组；</li>
+                    <li>报警设置中，数据类型和节点名称支持正则表达式匹配多个服务节点名；</li>
+                    <li>节点详情页-节点详情页包含当前统计的状态值，IP，URL排序等；</li>
+                </ol>
+            </footer>
+        </blockquote>
+
+        <blockquote>
+            <h5>客户端</h5>
+            <footer>主要功能:
+                <ol>
+                    <li>客户端基于Inotify事件驱动的通知机制，当检测到文件修改写入时，检索日志中包含4xx 5xx的日志，上传到服务端；</li>
+                    <li>当没有文件更新时，自动释放资源，等待下一次事件触发启动。</li>
+                </ol>
+            </footer>
+        </blockquote>
+
+        <blockquote>
+            <h5>项目部署</h5>
+            <footer>Java环境:
+                <ol>
+                    <li>salt -N '{项目组}' state.sls logmon.java</li>
+                    <li>salt -N '{项目组}' cmd.run "chkconfig supervisord on; supervisord -c /etc/supervisord.conf"</li>
+                </ol>
+            </footer>
+            <footer>PHP环境:
+                <ol>
+                    <li>salt -N '{项目组}' state.sls logmon.php</li>
+                    <li>salt -N '{项目组}' cmd.run "chkconfig supervisord on;supervisord -c /etc/supervisord.conf"</li>
+                </ol>
+            </footer>
+        </blockquote>
+      <h5></h5>
+        <p><p>
+
+    <h5>功能截图</h5>
+
+        <table>
+            <tr><td><span>首页</span>
+                <img src="{% static "images/home.png" %}" class="img-responsive" alt="Responsive image">
+                </td>
+                <td><span>详情页</span>
+                    <img src="{% static "images/detail.png" %}"  class="img-responsive" alt="Responsive image">
+                </td>
+            </tr>
+            <tr>
+                <td><span>报警配置页</span>
+                    <img src="{% static "images/alert.png" %}" class="img-responsive" alt="Responsive image">
+                </td>
+                <td><span>个人信息页</span>
+                    <img src="{% static "images/profile.png" %}"   class="img-responsive" alt="Responsive image">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>企业微信通知</span>
+                    <img src="{% static "images/wechar.png" %}" height="100" width="400" class="img-responsive" alt="Responsive image">
+                </td>
+                </td>
+                <td>
+                    <span>报警详情</span>
+                    <img src="{% static "images/wechar-alert.png" %}" height="100" width="400"class="img-responsive" alt="Responsive image">
+                </td>
+                </td>
+            </tr>
+        </table>
+
+
+
+
+
+    </div>
+
+
+{% endblock content %}

@@ -1,0 +1,49 @@
+    body{
+        min-height: 1000px;
+    }
+    #has-alert-warning {
+        color: red;
+    }
+    #has-alert-critical {
+        color: #ffbb74;
+    }
+
+    #has-alert-unknown {
+        color: #266bff;
+    }
+
+
+    tr .has-alert-warning td:not(:first-child){
+        color: red;
+    }
+    tr .has-alert-critical td:not(:first-child){
+        color: #ffbb74;
+    }
+
+    tr .has-alert-unknown td:not(:first-child){
+        color: #266bff;
+    }
+
+    /*.navbar{*/
+
+        /*margin-bottom: 0px !important;*/
+    /*/!*}*!/*/
+    /*.status,.alerts-list,.hosts-list{*/
+        /*height:100%;*/
+    /*}*/
+    /*.paginations {*/
+        /*padding-left: 0;*/
+        /*margin: 20px 0;*/
+        /*border-radius: 4px;*/
+    /*}*/
+
+    .log-footer{
+        margin-top: 10px;
+        bottom: 0;
+        padding: 40px 0;
+        color: #999;
+        text-align: center;
+        background-color: #f9f9f9;
+        border-top: 1px solid #e5e5e5;
+
+    }

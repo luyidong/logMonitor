@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="hosts-list">
+
+
+
+
+        <h3>主机详情页</h3>
+
+         <li><a href='{{ instance.get_absolute_url }}'>{{ instance.node_name }}</a></li>
+<!--
+    <div id="containers" style="min-width:1000px;height:400px">
+        <div id="node_name" name="{{ instance.node_name }}">{{ instance.node_name }}</div>
+        <div id="data_type" name="{{ instance.data_type }}">{{ instance.data_type }}</div>
+
+    </div>
+         </p>
+         </p>
+         </p>
+         </p>
+         -->
+                <div id="containerc" style="min-width:400px;height:400px"></div>
+
+        <div id="containera" style="min-width:400px;height:400px"></div>
+        <div id="containerb" style="min-width:400px;height:400px"></div>
+
+        </p>
+         </p>
+         </p>
+         </p>
+
+状态码
+处理时间
+url
+访问次数
+
+        <div id="container" style="min-width:400px;height:400px">
+        <div id="node_name" name="{{ instance.node_name }}">{{ instance.node_name }}</div>
+        <div id="data_type" name="{{ instance.data_type }}">{{ instance.data_type }}</div>
+
+
+        </div>
+
+         </p>
+         </p>
+         </p>
+         </p>
+
+         </p>
+         </p>
+         </p>
+         </p>
+             </p>
+         </p>
+         </p>
+         </p>
+    </div>
+{% endblock content %}

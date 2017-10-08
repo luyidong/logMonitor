@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    {% for i in questset_list %}
+
+    {{ i.node_name }}
+    {% endfor %}
+
+    <div class="hosts-list">
+        <h3>主机列表</h3>
+           {% if object_list %}
+
+          <table id="get1" class="table table-striped">{% csrf_token %}
+               <tr>
+                   <th><small>主机名</small></th>
+                   <th><small>监控类型</small></th>
+               </tr>
+               {% for alert in object_list %}
+                        <tr>
+                           <td><a id="p1" href="{% url "hosts-detail" id=alert.id %}">{{ alert.node_name }}</td>
+                           <td>{{ alert.data_type }}</td>
+                        </tr>
+               {% endfor %}
+           </table>
+           {% else %}
+           <i>没有收集的主机，请先添加客户端。</i>
+
+           {% endif %}
+        {% if is_paginated %}
+        <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li>
+                <span><a href="?page={{ page_obj.previous_page_number }}">上一页</a></span>
+            </li>
+        {% endif %}
+            <li class="">
+                <span>位置 {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+            </li>
+        {% if page_obj.has_next %}
+            <li>
+                <span><a href="?page={{ page_obj.next_page_number }}">下一页</a></span>
+            </li>
+        {% endif %}
+        </ul>
+        {% else %}
+           <!--还没有满足分页条目>--<!-->
+        {% endif %}
+    </div>
+
+{% endblock content %}

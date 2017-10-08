@@ -1,0 +1,19 @@
+{% extends "nginx/base-nginx.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% if object %}
+   <h3>更新配置</h3>
+   {% else %}
+   <h3>新建配置</h3>
+   {% endif %}
+   <form action="" method="post">{% csrf_token %}
+   <div style="width:40%">
+       {{ form|crispy }}
+       <input  type="submit" value="{% if object %}更新{% else %}创建{% endif %}" />
+       <a href="{% url 'alerts-list' %}">取消</a>
+   </div>
+   </form>
+
+{% endblock content %}
