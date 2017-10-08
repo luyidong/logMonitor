@@ -30,16 +30,17 @@
 
 Java环境:
 
-`
+```C
 salt -N '{项目组}' state.sls logmon.java
 salt -N '{项目组}' cmd.run "chkconfig supervisord on; supervisord -c /etc/supervisord.conf"
-`
+```
 
 PHP环境:
-`
+
+```C
 salt -N '{项目组}' state.sls logmon.php
 salt -N '{项目组}' cmd.run "chkconfig supervisord on;supervisord -c /etc/supervisord.conf"
-`
+```
 
 首页
 
